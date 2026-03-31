@@ -48,7 +48,7 @@ accelerate launch --main_process_port 12231 --config_file "configs/accel_ds_8h80
   --tie_word_emb_proj 1 \
   --use_all_attn 1 \
   --aux_loss_scale_factor 0.2 \
-  2>&1 | tee accel_ds_8h800_gas1_20260328_1.log
+  2>&1 | tee accel_ds_8h800_gas1_20260331_1.log
 
 
 
