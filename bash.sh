@@ -21,10 +21,8 @@ python data/generate_general_data_parallel.py \
 
 
 2.模型训练
-export WANDB_MODE=disabled
-export WANDB_DISABLED=true
-# 或者如果你有团队的 wandb name，请使用下面这行：
-# export WANDB_ENTITY="your_team_name"
+wandb login --relogin
+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
 
 accelerate launch --main_process_port 12231 --config_file "configs/accel_ds_8h800_gas1.yaml" hf_trainer.py \
   --log_steps 100 \
