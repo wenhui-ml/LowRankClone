@@ -113,7 +113,7 @@ def process_sft_v1(model_cls, tkn, data_max_len, num_workers):
     output_path = f"../datasets/mix_general_{model_cls}_tokenized_sft_v1.0"
     os.makedirs(output_path, exist_ok=True)
 
-    data_hermes = get_any_dataset("../xxxx/datasets/ultrachat_200k", tkn)["train"]
+    data_hermes = get_any_dataset("datasets/ultrachat_200k", tkn)["train"]
     data_hermes = get_dataloader(ShardedDataset(data_hermes, "general", None, data_max_len, tkn, skip_factor=1), num_workers)
     with open(f"{output_path}/ultrachat.jsonl", "w", encoding="utf-8") as _o:
         _cnt = 0
@@ -128,7 +128,7 @@ def process_v5_1_20b(model_cls, tkn, data_max_len, num_workers):
     os.makedirs(output_path, exist_ok=True)
 
     in_paths = [
-        "../xxxx/datasets/fineweb-edu-dedup",
+        "datasets/fineweb-edu-dedup",
     ]
     out_names = [
         "fineweb-edu-dedup",
@@ -151,7 +151,7 @@ def process_v5_1_20b(model_cls, tkn, data_max_len, num_workers):
             print(f"in total, {out_name} lines: {_cnt}")
         shuffle_jsonl(f"{output_path}/{out_name}.jsonl", f"{output_path}/{out_name}.shuffled.jsonl")
 
-    data_hermes = get_any_dataset("../xxxx/datasets/OpenHermes-2.5", tkn)["train"]
+    data_hermes = get_any_dataset("datasets/OpenHermes-2.5", tkn)["train"]
     data_hermes = get_dataloader(ShardedDataset(data_hermes, "general", None, data_max_len, tkn, skip_factor=1), 1)
     with open(f"{output_path}/hermes.jsonl", "w", encoding="utf-8") as _o:
         _cnt = 0
@@ -186,11 +186,11 @@ def process_v5_1_20b(model_cls, tkn, data_max_len, num_workers):
     )
 
 def process_v5_1(model_cls, tkn, data_max_len, num_workers):
-    output_path = f"../datasets/mix_general_{model_cls}_tokenized_v5.1"
+    output_path = f"./mix_general_{model_cls}_tokenized_v5.1_10b"
     os.makedirs(output_path, exist_ok=True)
 
     in_paths = [
-        "../xxxx/datasets/fineweb-edu-dedup",
+        "datasets/fineweb-edu-dedup",
     ]
     out_names = [
         "fineweb-edu-dedup",
@@ -199,7 +199,7 @@ def process_v5_1(model_cls, tkn, data_max_len, num_workers):
         1,
     ]
     for in_path, skip_factor, out_name in zip(in_paths, skip_factors, out_names):
-        data = ParquetReader(in_path)()
+        data = ParquetReader(in_path, glob_pattern="**/*.parquet")()
         data = get_dataloader(
             ShardedDataset(data, "general", None, data_max_len, tkn,
                            skip_factor=skip_factor, min_edu_score=4),
@@ -213,7 +213,7 @@ def process_v5_1(model_cls, tkn, data_max_len, num_workers):
             print(f"in total, {out_name} lines: {_cnt}")
         shuffle_jsonl(f"{output_path}/{out_name}.jsonl", f"{output_path}/{out_name}.shuffled.jsonl")
 
-    data_hermes = get_any_dataset("../xxxx/datasets/OpenHermes-2.5", tkn)["train"]
+    data_hermes = get_any_dataset("datasets/OpenHermes-2.5", tkn)["train"]
     data_hermes = get_dataloader(ShardedDataset(data_hermes, "general", None, data_max_len, tkn, skip_factor=1), 1)
     with open(f"{output_path}/hermes.jsonl", "w", encoding="utf-8") as _o:
         _cnt = 0
@@ -252,9 +252,9 @@ def process_v5_0(model_cls, tkn, data_max_len, num_workers):
     os.makedirs(output_path, exist_ok=True)
 
     in_paths = [
-        # "../xxxx/datasets/smollm-corpus/cosmopedia-v2",
-        "../xxxx/datasets/dclm-baseline-1.0-parquet",
-        # "../xxxx/datasets/fineweb-edu-dedup",
+        # "datasets/smollm-corpus/cosmopedia-v2",
+        "datasets/dclm-baseline-1.0-parquet",
+        # "datasets/fineweb-edu-dedup",
     ]
     out_names = [
         # "cosmo",
@@ -277,7 +277,7 @@ def process_v5_0(model_cls, tkn, data_max_len, num_workers):
             print(f"in total, {out_name} lines: {_cnt}")
         shuffle_jsonl(f"{output_path}/{out_name}.jsonl", f"{output_path}/{out_name}.shuffled.jsonl")
     
-    # data_hermes = get_any_dataset("../xxxx/datasets/OpenHermes-2.5", tkn)["train"]
+    # data_hermes = get_any_dataset("datasets/OpenHermes-2.5", tkn)["train"]
     # data_hermes = get_dataloader(ShardedDataset(data_hermes, "general", None, data_max_len, tkn, skip_factor=1), 1)
     # with open(f"{output_path}/hermes.jsonl", "w", encoding="utf-8") as _o:
     #     _cnt = 0
@@ -318,9 +318,9 @@ def process_v4_1(model_cls, tkn, data_max_len, num_workers):
     os.makedirs(output_path, exist_ok=True)
 
     files = [
-        f"../xxxx/datasets/mix_general_{model_cls}_tokenized_v3.1/fineweb.shuffled.jsonl", 
-        f"../xxxx/datasets/mix_general_{model_cls}_tokenized_v4.0/dclm.shuffled.jsonl",             
-        f"../xxxx/datasets/mix_general_{model_cls}_tokenized_v3.1/cosmopedia.shuffled.jsonl"
+        f"datasets/mix_general_{model_cls}_tokenized_v3.1/fineweb.shuffled.jsonl", 
+        f"datasets/mix_general_{model_cls}_tokenized_v4.0/dclm.shuffled.jsonl",             
+        f"datasets/mix_general_{model_cls}_tokenized_v3.1/cosmopedia.shuffled.jsonl"
     ]
     limits = [int(5e6), int(5e6), int(10e6)]
     with open(f"{output_path}/no_shuffle.jsonl", 'w', encoding='utf-8') as _out:
@@ -339,7 +339,7 @@ def process_v4_1(model_cls, tkn, data_max_len, num_workers):
     )
 
     with open(f"{output_path}/train.jsonl", "a", encoding="utf-8") as _out:
-        with open(f"../xxxx/datasets/mix_general_{model_cls}_tokenized_v3.1/hermes.shuffled.jsonl", "r") as _in:
+        with open(f"datasets/mix_general_{model_cls}_tokenized_v3.1/hermes.shuffled.jsonl", "r") as _in:
             for line in tqdm(_in):
                 _out.write(line)
 
@@ -352,20 +352,20 @@ def process_v4_1(model_cls, tkn, data_max_len, num_workers):
                 cnt += 1
                 if cnt == tokens_10b:
                     break
-        with open(f"../xxxx/datasets/mix_general_{model_cls}_tokenized_v3.1/hermes.shuffled.jsonl", "r") as _in:
+        with open(f"datasets/mix_general_{model_cls}_tokenized_v3.1/hermes.shuffled.jsonl", "r") as _in:
             for line in tqdm(_in):
                 _out.write(line)
 
 def process_v4_0(model_cls, tkn, data_max_len, num_workers):
-    data_dclm = ParquetReader("../xxxx/datasets/dclm-baseline-1.0-parquet")()
+    data_dclm = ParquetReader("datasets/dclm-baseline-1.0-parquet")()
     data_dclm = get_dataloader(ShardedDataset(data_dclm, "general", None, data_max_len, tkn, 1), num_workers)
     output_path = f"../datasets/mix_general_{model_cls}_tokenized_v4.0"
     os.makedirs(output_path, exist_ok=True)
 
     files = [
-        f"../xxxx/datasets/mix_general_{model_cls}_tokenized_v3.1/fineweb.shuffled.jsonl", 
-        f"../xxxx/datasets/mix_general_{model_cls}_tokenized_v4.0/dclm.shuffled.jsonl",             
-        f"../xxxx/datasets/mix_general_{model_cls}_tokenized_v3.1/cosmopedia.shuffled.jsonl"
+        f"datasets/mix_general_{model_cls}_tokenized_v3.1/fineweb.shuffled.jsonl", 
+        f"datasets/mix_general_{model_cls}_tokenized_v4.0/dclm.shuffled.jsonl",             
+        f"datasets/mix_general_{model_cls}_tokenized_v3.1/cosmopedia.shuffled.jsonl"
     ]
     limits = [int(10e6), int(6.6e6), int(3.4e6)]
     with open(f"{output_path}/no_shuffle.jsonl", 'w', encoding='utf-8') as _out:
@@ -384,7 +384,7 @@ def process_v4_0(model_cls, tkn, data_max_len, num_workers):
     )
 
     with open(f"{output_path}/train.jsonl", "a", encoding="utf-8") as _out:
-        with open(f"../xxxx/datasets/mix_general_{model_cls}_tokenized_v3.1/hermes.shuffled.jsonl", "r") as _in:
+        with open(f"datasets/mix_general_{model_cls}_tokenized_v3.1/hermes.shuffled.jsonl", "r") as _in:
             for line in tqdm(_in):
                 _out.write(line)
 
@@ -397,7 +397,7 @@ def process_v4_0(model_cls, tkn, data_max_len, num_workers):
                 cnt += 1
                 if cnt == tokens_10b:
                     break
-        with open(f"../xxxx/datasets/mix_general_{model_cls}_tokenized_v3.1/hermes.shuffled.jsonl", "r") as _in:
+        with open(f"datasets/mix_general_{model_cls}_tokenized_v3.1/hermes.shuffled.jsonl", "r") as _in:
             for line in tqdm(_in):
                 _out.write(line)
 
@@ -527,7 +527,7 @@ def process_redpajama1_0(model_cls, tkn, data_max_len, num_workers):
 
 def main(
     version,
-    tkn_path="../xxxx/models/Meta-Llama-3-8B-Instruct",
+    tkn_path="models/Meta-Llama-3-8B-Instruct",
     num_workers=2,
     data_max_len=1024,
 ):

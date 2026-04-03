@@ -1,5 +1,5 @@
 ### model
-model_name_or_path: ../xxxx/models/converted_models/llama-1.5b-10bt-score4
+model_name_or_path: /home/ubuntu/wenhui/LowRankClone/ckpts/LRC-1.5B-Converted
 trust_remote_code: true
 
 ### method
